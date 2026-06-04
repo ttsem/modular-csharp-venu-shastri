@@ -75,40 +75,27 @@ namespace TelCo.ColorCoder
         /// </summary>
         /// <param name="pair">Color pair with major and minor color</param>
         /// <returns></returns>
-        private static int GetPairNumberFromColor(ColorPair pair)
+       private static int GetPairNumberFromColor(ColorPair pair)
         {
-            // Find the major color in the array and get the index
-            int majorIndex = -1;
-            for (int i = 0; i < colorMapMajor.Length; i++)
-            {
-                if (colorMapMajor[i] == pair.majorColor)
-                {
-                    majorIndex = i;
-                    break;
-                }
-            }
+    int majorIndex = GetColorIndex(colorMapMajor, pair.majorColor);
+    int minorIndex = GetColorIndex(colorMapMinor, pair.minorColor);
 
-            // Find the minor color in the array and get the index
-            int minorIndex = -1;
-            for (int i = 0; i < colorMapMinor.Length; i++)
-            {
-                if (colorMapMinor[i] == pair.minorColor)
-                {
-                    minorIndex = i;
-                    break;
-                }
-            }
-            // If colors can not be found throw an exception
-            if (majorIndex == -1 || minorIndex == -1)
-            {
-                throw new ArgumentException(
-                    string.Format("Unknown Colors: {0}", pair.ToString()));
-            }
+    return (majorIndex * colorMapMinor.Length) + minorIndex + 1;
+       }
 
-            // Compute pair number and Return  
-            // (Note: +1 in compute is because pair number is 1 based, not zero)
-            return (majorIndex * colorMapMinor.Length) + (minorIndex + 1);
-        }
+private static int GetColorIndex(Color[] colorMap, Color color)
+{
+    int index = Array.IndexOf(colorMap, color);
+
+    if (index < 0)
+    {
+        throw new ArgumentException($"Unknown Color: {color}");
+    }
+
+    return index;
+}       
+        
+        
         /// <summary>
         /// Test code for the class
         /// </summary>
